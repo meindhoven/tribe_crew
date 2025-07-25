@@ -1,14 +1,12 @@
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
-from crewai.agents.agent_builder.base_agent import BaseAgent
-from typing import List
 from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv(override=True)
 
 # Import your custom tools
-from tools import PerplexityTool, FileReadTool, CompanyKnowledgeBaseTool
+from .tools.tools import PerplexityTool, FileReadTool, CompanyKnowledgeBaseTool
 
 @CrewBase
 class EventPitchCrew:
