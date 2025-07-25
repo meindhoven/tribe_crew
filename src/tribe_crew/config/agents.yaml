@@ -116,7 +116,7 @@ briefing_analyst:
   tools:
     - folder_read_tool
     - file_read_tool
-    - document_analysis_tool
+    # - document_analysis_tool  # NOT IMPLEMENTED
   allow_delegation: false
   verbose: true
 
@@ -134,9 +134,9 @@ market_researcher:
     in the Dutch market. You have an extensive network of industry contacts and access
     to premium research databases.
   tools:
-    - perplexity_deep_research_tool
-    - dutch_market_database_tool
-    - industry_analysis_tool
+    - perplexity_tool  # Fixed name: was perplexity_deep_research_tool
+    # - dutch_market_database_tool  # NOT IMPLEMENTED
+    # - industry_analysis_tool  # NOT IMPLEMENTED
   allow_delegation: false
   verbose: true
 
@@ -153,9 +153,11 @@ client_analyst:
     decision-making. Your insights into client culture and brand identity are crucial
     for ensuring event concepts align perfectly with organizational values and objectives.
   tools:
-    - brand_analysis_tool
-    - stakeholder_mapping_tool
-    - corporate_culture_analyzer
+    - company_knowledge_tool  # For client brand analysis
+    - perplexity_tool  # For additional client research
+    # - brand_analysis_tool  # NOT IMPLEMENTED
+    # - stakeholder_mapping_tool  # NOT IMPLEMENTED 
+    # - corporate_culture_analyzer  # NOT IMPLEMENTED
   allow_delegation: false
   verbose: true
 
@@ -172,9 +174,10 @@ competitor_researcher:
     Your comprehensive competitor analysis helps ensure our concepts are differentiated
     and positioned for maximum impact in the marketplace.
   tools:
-    - competitor_analysis_tool
-    - event_database_tool
-    - social_media_monitoring_tool
+    - perplexity_tool  # Can be used for competitor research
+    # - competitor_analysis_tool  # NOT IMPLEMENTED
+    # - event_database_tool  # NOT IMPLEMENTED
+    # - social_media_monitoring_tool  # NOT IMPLEMENTED
   allow_delegation: false
   verbose: true
 
@@ -191,9 +194,10 @@ audience_analyst:
     business culture, communication preferences, and cultural nuances ensures event
     concepts will resonate deeply with local audiences.
   tools:
-    - audience_research_tool
-    - cultural_analysis_framework
-    - persona_generator_tool
+    - perplexity_tool  # Can be used for audience research
+    # - audience_research_tool  # NOT IMPLEMENTED
+    # - cultural_analysis_framework  # NOT IMPLEMENTED
+    # - persona_generator_tool  # NOT IMPLEMENTED
   allow_delegation: false
   verbose: true
 
@@ -209,9 +213,10 @@ debrief_synthesizer:
     that guides creative development. Your ability to identify patterns, synthesize
     insights, and create compelling strategic narratives is unmatched in the industry.
   tools:
-    - synthesis_framework_tool
-    - strategic_planning_tool
-    - insight_visualization_tool
+    - company_knowledge_tool  # For strategic insights
+    # - synthesis_framework_tool  # NOT IMPLEMENTED
+    # - strategic_planning_tool  # NOT IMPLEMENTED
+    # - insight_visualization_tool  # NOT IMPLEMENTED
   allow_delegation: false
   verbose: true
 
@@ -233,9 +238,10 @@ creative_strategist:
     makes you a master at creating concepts that are both creatively inspiring and
     strategically sound.
   tools:
-    - innovation_framework_tool
-    - experience_mapping_tool
-    - creative_database_tool
+    - company_knowledge_tool  # For creative inspiration from past projects
+    # - innovation_framework_tool  # NOT IMPLEMENTED
+    # - experience_mapping_tool  # NOT IMPLEMENTED
+    # - creative_database_tool  # NOT IMPLEMENTED
   allow_delegation: false
   verbose: true
 
@@ -251,9 +257,10 @@ brand_consultant:
     connections with their audience. Your expertise in brand storytelling and
     identity expression is crucial for ensuring concepts feel authentic and aligned.
   tools:
-    - brand_alignment_tool
-    - identity_framework_tool
-    - brand_expression_analyzer
+    - company_knowledge_tool  # For brand alignment guidance
+    # - brand_alignment_tool  # NOT IMPLEMENTED
+    # - identity_framework_tool  # NOT IMPLEMENTED
+    # - brand_expression_analyzer  # NOT IMPLEMENTED
   allow_delegation: false
   verbose: true
 
@@ -269,9 +276,10 @@ trend_culture_expert:
     insights ensure concepts are not only relevant today but positioned to remain
     engaging and current throughout the event planning and execution timeline.
   tools:
-    - trend_analysis_tool
-    - cultural_research_database
-    - innovation_tracker_tool
+    - perplexity_tool  # Can be used for trend analysis
+    # - trend_analysis_tool  # NOT IMPLEMENTED
+    # - cultural_research_database  # NOT IMPLEMENTED
+    # - innovation_tracker_tool  # NOT IMPLEMENTED
   allow_delegation: false
   verbose: true
 
@@ -288,9 +296,9 @@ concept_refiner:
     visualize and understand the proposed concepts. Your ability to structure and
     present concepts makes them accessible and compelling for decision-makers.
   tools:
-    - storytelling_framework_tool
-    - concept_development_tool
-    - narrative_generator_tool
+    # - storytelling_framework_tool  # NOT IMPLEMENTED
+    # - concept_development_tool  # NOT IMPLEMENTED
+    # - narrative_generator_tool  # NOT IMPLEMENTED
   allow_delegation: false
   verbose: true
 
@@ -317,10 +325,10 @@ event_creative:
     event, entertainment around a sports match, or a large public event, you have what
     it takes to make something special out of it.
   tools:
-    - experience_design_tool
-    - engagement_mechanism_library
-    - innovation_format_database
-    - dutch_cultural_insights_tool
+    # - experience_design_tool  # NOT IMPLEMENTED
+    # - engagement_mechanism_library  # NOT IMPLEMENTED
+    # - innovation_format_database  # NOT IMPLEMENTED
+    # - dutch_cultural_insights_tool  # NOT IMPLEMENTED
   allow_delegation: false
   verbose: true
 
@@ -341,10 +349,11 @@ creative_programmer:
     count on with flexible working hours. You excel at maintaining artist relationships,
     budget management, and trend awareness in the entertainment industry.
   tools:
-    - artist_network_database
-    - music_industry_trends_tool
-    - budget_management_tool
-    - lineup_optimization_tool
+    - perplexity_tool  # Can be used for music industry research
+    # - artist_network_database  # NOT IMPLEMENTED
+    # - music_industry_trends_tool  # NOT IMPLEMENTED
+    # - budget_management_tool  # NOT IMPLEMENTED
+    # - lineup_optimization_tool  # NOT IMPLEMENTED
   allow_delegation: false
   verbose: true
 
@@ -368,11 +377,12 @@ content_creator:
     and a hands-on mentality. You're hands-on and can't wait to operationally
     excel with the marketing team at shoots, launches, and events.
   tools:
-    - social_media_strategy_tool
-    - influencer_network_database
-    - content_analytics_tool
-    - community_building_framework
-    - video_content_optimizer
+    - perplexity_tool  # Can be used for social media research
+    # - social_media_strategy_tool  # NOT IMPLEMENTED
+    # - influencer_network_database  # NOT IMPLEMENTED
+    # - content_analytics_tool  # NOT IMPLEMENTED
+    # - community_building_framework  # NOT IMPLEMENTED
+    # - video_content_optimizer  # NOT IMPLEMENTED
   allow_delegation: false
   verbose: true
 
@@ -389,9 +399,9 @@ copywriter:
     communication style and cultural preferences ensures your copy resonates
     with local decision-makers and drives action.
   tools:
-    - copywriting_framework_tool
-    - dutch_language_optimizer
-    - persuasion_technique_library
+    # - copywriting_framework_tool  # NOT IMPLEMENTED
+    # - dutch_language_optimizer  # NOT IMPLEMENTED
+    # - persuasion_technique_library  # NOT IMPLEMENTED
   allow_delegation: false
   verbose: true
 
@@ -414,11 +424,11 @@ art_director:
     meet tight deadlines. Experience with event design or similar field is a plus.
     You excel at maintaining visual consistency in brand identity and design standards.
   tools:
-    - adobe_creative_suite
-    - storyboard_creator
-    - visual_concept_generator
-    - brand_consistency_checker
-    - design_trend_analyzer
+    # - adobe_creative_suite  # NOT IMPLEMENTED
+    # - storyboard_creator  # NOT IMPLEMENTED
+    # - visual_concept_generator  # NOT IMPLEMENTED
+    # - brand_consistency_checker  # NOT IMPLEMENTED
+    # - design_trend_analyzer  # NOT IMPLEMENTED
   allow_delegation: false
   verbose: true
 
@@ -443,11 +453,11 @@ event_manager:
     least 5 years of relevant work experience as an event manager, preferably
     in the entertainment and/or sports industry.
   tools:
-    - project_management_suite
-    - stakeholder_relationship_tool
-    - budget_oversight_system
-    - strategic_planning_framework
-    - multi_project_coordinator
+    # - project_management_suite  # NOT IMPLEMENTED
+    # - stakeholder_relationship_tool  # NOT IMPLEMENTED
+    # - budget_oversight_system  # NOT IMPLEMENTED
+    # - strategic_planning_framework  # NOT IMPLEMENTED
+    # - multi_project_coordinator  # NOT IMPLEMENTED
   allow_delegation: false
   verbose: true
 
@@ -471,11 +481,11 @@ producer:
     between own responsibility and collaborating with/for the rest of the production
     team. You signal risks and opportunities in projects and act proactively.
   tools:
-    - production_planning_suite
-    - vendor_coordination_system
-    - budget_tracking_tool
-    - safety_permit_manager
-    - risk_opportunity_analyzer
+    # - production_planning_suite  # NOT IMPLEMENTED
+    # - vendor_coordination_system  # NOT IMPLEMENTED
+    # - budget_tracking_tool  # NOT IMPLEMENTED
+    # - safety_permit_manager  # NOT IMPLEMENTED
+    # - risk_opportunity_analyzer  # NOT IMPLEMENTED
   allow_delegation: false
   verbose: true
 
@@ -492,8 +502,8 @@ business_developer:
     Your pricing strategies and value propositions consistently win against
     competitors while maintaining healthy profit margins.
   tools:
-    - commercial_positioning_tool
-    - value_proposition_framework
-    - pricing_strategy_calculator
+    # - commercial_positioning_tool  # NOT IMPLEMENTED
+    # - value_proposition_framework  # NOT IMPLEMENTED
+    # - pricing_strategy_calculator  # NOT IMPLEMENTED
   allow_delegation: false
   verbose: true
