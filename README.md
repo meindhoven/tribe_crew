@@ -18,9 +18,27 @@ Next, navigate to your project directory and install the dependencies:
 ```bash
 crewai install
 ```
-### Customizing
+### Environment Setup
 
-**Add your `OPENAI_API_KEY` into the `.env` file**
+**Set up your environment variables:**
+
+1. Copy the example environment file:
+```bash
+cp .env.example .env
+```
+
+2. Edit `.env` and add your API keys:
+   - `OPENAI_API_KEY`: Required for CrewAI agents (get from https://platform.openai.com/api-keys)
+   - `PERPLEXITY_API_KEY`: Required for market research tool (get from https://docs.perplexity.ai/docs/getting-started)
+
+### Security Notes
+
+- Never commit your `.env` file to version control
+- Keep your API keys secure and rotate them regularly
+- The FileReadTool has built-in security restrictions (file type and size limits)
+- Only specific file extensions are allowed: .txt, .md, .pdf, .doc, .docx, .json, .yaml, .yml
+
+### Customizing
 
 - Modify `src/tribe_crew/config/agents.yaml` to define your agents
 - Modify `src/tribe_crew/config/tasks.yaml` to define your tasks
