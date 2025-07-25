@@ -8,7 +8,16 @@ dependencies = [
     "crewai[tools]>=0.141.0,<1.0.0",
     "python-dotenv>=1.0.0",
     "requests>=2.31.0",
-    "pathlib2>=2.3.7; python_version<'3.4'"
+    "pathlib2>=2.3.7; python_version<'3.4'",
+    "chromadb>=0.4.15",
+    "google-generativeai>=0.3.0",
+    "langchain>=0.1.0",
+    "langchain-community>=0.0.10",
+    "langchain-google-genai>=0.0.5",
+    "watchdog>=3.0.0",
+    "sentence-transformers>=2.2.0",
+    "numpy>=1.24.0",
+    "pandas>=2.0.0"
 ]
 
 [project.scripts]

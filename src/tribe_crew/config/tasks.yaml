@@ -7,12 +7,15 @@
 
 brief_analysis_task:
   description: >
-    Analyze the client briefing document provided in '{briefing_doc_path}'.
-    Identify the event type, assess the brief's completeness, and generate a list
-    of clarifying questions for the client.
+    Analyze all client briefing documents found in the input_files folder.
+    Use the folder reading tool to scan for briefing documents and identify 
+    the event type, assess the brief's completeness, and generate a list
+    of clarifying questions for the client. If no files are found in the 
+    input_files folder, request the user to place briefing documents there.
   expected_output: >
     A preliminary analysis report containing the event type, a completeness
-    assessment, and a list of follow-up questions.
+    assessment, and a list of follow-up questions based on all available
+    briefing documents.
   agent: briefing_analyst
 
 client_and_competitor_research_task:
