@@ -79,46 +79,80 @@ concept_refinement_task:
   context:
     - creative_concepting_task
 
+# --- Handover Task ---
+concept_handover_task:
+  description: >
+    Prepare a comprehensive handover package that includes the structured debrief,
+    all three refined concepts, and clear recommendations for the proposal development
+    phase. This should serve as the bridge between the concepting and proposal phases.
+  expected_output: >
+    A complete handover document that includes: 1) The structured debrief summary,
+    2) All three refined concepts with detailed descriptions, 3) Strategic recommendations
+    for proposal development, 4) Key insights and considerations for the selected concept.
+  agent: debrief_synthesizer
+  context:
+    - debrief_synthesis_task
+    - concept_refinement_task
+
 # --- Phase D Tasks (Proposal Development Crew) ---
 # This crew would be initiated after the human-in-the-loop step.
 # The input would be the '{selected_concept}' and '{human_feedback}'.
 
 visual_development_task:
   description: >
-    Based on the selected concept '{selected_concept}' and feedback '{human_feedback}',
-    develop a visual identity and mood board that captures the event's essence.
+    Based on the selected concept '{selected_concept}', the concept handover package,
+    and feedback '{human_feedback}', develop a visual identity and mood board that 
+    captures the event's essence. Use the strategic insights from the debrief to inform
+    your visual direction.
   expected_output: >
-    A mood board (as a file path or description) and a summary of the visual identity.
+    A comprehensive visual development package including: 1) A detailed mood board,
+    2) Visual identity guidelines, 3) Color palette and typography recommendations,
+    4) Visual concept rationale tied to the strategic brief.
   agent: art_director
+  context:
+    - concept_handover_task
 
 copywriting_task:
   description: >
     Write the client-facing copy for the pitch document. The copy should be persuasive
     and clearly articulate the vision and value of the selected concept '{selected_concept}'.
-    Incorporate the feedback '{human_feedback}'.
+    Incorporate the feedback '{human_feedback}' and leverage insights from the concept
+    handover package to ensure messaging alignment.
   expected_output: >
-    All necessary text for the final pitch document, including headlines, concept
-    description, and key messaging.
+    Complete copywriting package including: 1) Executive summary, 2) Concept description
+    and narrative, 3) Key messaging and value propositions, 4) Call-to-action and next steps.
   agent: copywriter
+  context:
+    - concept_handover_task
 
 production_planning_task:
   description: >
-    Create a high-level production plan for the selected concept '{selected_concept}'.
-    Outline a preliminary timeline and list key logistical and budgetary considerations
-    to be aware of.
+    Create a comprehensive production plan for the selected concept '{selected_concept}'.
+    Use the strategic insights from the concept handover package to outline a detailed
+    timeline, budget considerations, and key logistical requirements. Incorporate any
+    specific feedback '{human_feedback}'.
   expected_output: >
-    A document outlining the preliminary production timeline and key logistical points.
+    A detailed production planning document including: 1) Project timeline with key milestones,
+    2) Budget framework and cost considerations, 3) Logistical requirements and venue considerations,
+    4) Risk assessment and mitigation strategies, 5) Team and vendor requirements.
   agent: event_producer
+  context:
+    - concept_handover_task
 
 final_pitch_assembly_task:
   description: >
-    Assemble the contributions from the Art Director, Copywriter, and Producer into
+    Assemble all contributions from the Art Director, Copywriter, and Producer into
     a single, polished "Commercial Pitch Document". Ensure the document is cohesive,
-    professional, and ready for the Project Director's final review.
+    professional, and ready for the Project Director's final review. Include executive
+    summary, concept overview, visual elements, and implementation plan.
   expected_output: >
-    A complete, client-ready pitch document in a structured format.
+    A complete, client-ready pitch document with: 1) Executive summary, 2) Strategic
+    foundation (from handover), 3) Creative concept presentation, 4) Visual identity
+    and mood board, 5) Implementation timeline and budget overview, 6) Next steps and
+    call-to-action. Document should be presentation-ready and professionally formatted.
   agent: proposal_manager
   context:
     - visual_development_task
     - copywriting_task
     - production_planning_task
+    - concept_handover_task
