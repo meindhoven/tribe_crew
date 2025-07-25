@@ -368,16 +368,18 @@ proposal_manager_coordination:
     - human_feedback
 
 # Parallel Proposal Development Tasks
-experience_design_development:
+creative_concept_development:
   description: >
-    Design innovative event formats and engagement mechanisms that bring the
-    selected concept to life. Use experience design tools and engagement libraries
-    to create detailed experiential frameworks that are creatively ambitious
-    and operationally feasible. Develop innovative format proposals.
+    Transform client wishes, target audiences, and themes into powerful event concepts
+    by thinking creatively from the first moment. Develop original ideas for both
+    client projects and own initiatives with surprising and innovative formats.
+    Consider content planning including speakers and artists, and ensure concepts
+    work for business events, entertainment around sports matches, or large public events.
   expected_output: >
-    Experience design document with innovative event formats, detailed engagement
-    mechanisms, experiential frameworks, operational feasibility analysis, and
-    creative implementation strategies for the selected concept.
+    Creative concept document with innovative event formats, original ideas adapted
+    to Dutch market preferences, content suggestions (speakers/artists), strategic
+    and creative thinking integration, and formats suitable for business events,
+    entertainment, and public events with cultural relevance.
   agent: event_creative
   context:
     - proposal_manager_coordination
@@ -387,16 +389,17 @@ experience_design_development:
     - selected_concept
     - human_feedback
 
-event_programming_design:
+artist_lineup_curation:
   description: >
-    Design detailed event programming and audience journey using programming
-    frameworks and journey mapping tools. Create optimal flow, content curation,
-    and engagement sequences that maximize attendee experience and deliver
-    key messages effectively throughout the event.
+    Maintain artist network relationships and expertly curate lineups for events
+    based on event type and audience. Manage budget considerations for artist
+    bookings and stay current with latest trends in music and entertainment
+    industry. Ensure the right artist is placed in the right context for maximum impact.
   expected_output: >
-    Comprehensive event programming document with detailed audience journey,
-    content curation strategy, engagement sequences, flow optimization, and
-    programming timeline that ensures seamless attendee experience.
+    Artist lineup proposal with curated artist selections, network relationship
+    status, budget allocation for artists, industry trend analysis, artist-event
+    fit analysis, and recommendations for optimal artist placement that aligns
+    with event concept and audience expectations.
   agent: creative_programmer
   context:
     - proposal_manager_coordination
@@ -406,16 +409,17 @@ event_programming_design:
     - selected_concept
     - human_feedback
 
-content_strategy_development:
+social_media_strategy_development:
   description: >
-    Develop comprehensive content strategy and multi-media planning using content
-    frameworks and engagement optimization tools. Plan content across all touchpoints,
-    ensure consistency, and optimize for audience engagement throughout the
-    event experience lifecycle.
+    Develop video social media strategy for Tribe Company and events, build
+    communities around brand presence, create earned media strategy, and develop
+    innovative social media concepts and formats. Plan influencer collaborations
+    and analyze social media performance for optimization recommendations.
   expected_output: >
-    Content strategy document with multi-media planning, touchpoint content mapping,
-    engagement optimization strategy, content consistency framework, and content
-    production timeline for all event communications and materials.
+    Social media strategy document with video content planning, community building
+    approach, earned media strategy, innovative social media concepts, influencer
+    collaboration plans, performance analytics framework, and optimization
+    recommendations for brand presentation across online platforms.
   agent: content_creator
   context:
     - proposal_manager_coordination
@@ -444,16 +448,17 @@ persuasive_copywriting:
     - selected_concept
     - human_feedback
 
-visual_identity_development:
+visual_concept_design:
   description: >
-    Develop compelling visual identity and mood boards using visual design tools
-    and inspiration databases. Create design direction that captures event essence,
-    communicates concept effectively, and provides strong visual impact for
-    stakeholder presentations and client materials.
+    Develop visual concepts and thematic guidelines for events, create conceptual
+    sketches and storyboards to visualize ideas, and produce high-quality graphic
+    designs for print and digital media including invitations, banners, displays,
+    and presentations while maintaining brand consistency.
   expected_output: >
-    Visual identity package with comprehensive mood boards, design direction,
-    visual concept rationale, color palettes, typography recommendations, and
-    visual frameworks that effectively communicate the event concept vision.
+    Visual concept package with thematic guidelines, conceptual sketches, storyboards,
+    mood boards, high-quality graphic designs for various media, brand consistency
+    framework, design rationale, and comprehensive visual assets that capture
+    the event concept and communicate it effectively to stakeholders.
   agent: art_director
   context:
     - proposal_manager_coordination
@@ -463,16 +468,17 @@ visual_identity_development:
     - selected_concept
     - human_feedback
 
-operational_planning:
+strategic_project_management:
   description: >
-    Develop comprehensive operational plans using Dutch venue databases and logistics
-    tools. Create venue strategies, logistics coordination, and operational frameworks
-    that ensure flawless execution within Dutch market context. Address practical
-    implementation requirements.
+    Lead the project from A to Z, managing the total organization including stakeholder
+    relationships, overall project planning, scripts, and budgets. Think strategically
+    about the concept, maintain overview of multiple project streams, and coordinate
+    with various teams and departments to ensure successful delivery.
   expected_output: >
-    Operational planning document with venue recommendations, logistics coordination
-    plans, operational frameworks, timeline management, resource requirements,
-    and practical implementation strategies for the Dutch market.
+    Strategic project management plan with stakeholder relationship matrix, comprehensive
+    project planning overview, budget management framework, team coordination
+    strategies, concept development input, risk mitigation plans, and multi-project
+    management approach with deadline tracking and quality assurance measures.
   agent: event_manager
   context:
     - proposal_manager_coordination
@@ -482,16 +488,18 @@ operational_planning:
     - selected_concept
     - human_feedback
 
-production_planning:
+production_coordination:
   description: >
-    Create detailed production plans using production tools and vendor management
-    systems. Develop vendor coordination strategies, risk management frameworks,
-    and quality control processes that ensure successful event delivery while
-    maintaining budget control and timeline adherence.
+    Independently produce project components from briefing to evaluation, request
+    quotes and coordinate technical, logistical, and facility aspects. Create
+    production plans, scripts, and budgets while ensuring safety, permits, and
+    all necessary materials. Signal risks and opportunities proactively.
   expected_output: >
-    Production planning document with detailed vendor coordination, risk management
-    frameworks, quality control processes, budget management strategies, and
-    production timeline with milestone tracking and contingency planning.
+    Production coordination document with detailed quote management, technical
+    and logistical coordination plans, facility requirements, production scripts,
+    safety and permit management, budget tracking, risk and opportunity analysis,
+    vendor management strategies, and comprehensive production timeline with
+    quality control measures.
   agent: producer
   context:
     - proposal_manager_coordination
@@ -534,15 +542,15 @@ final_proposal_assembly:
     for client presentation and approval.
   agent: proposal_manager
   context:
-    - experience_design_development
-    - event_programming_design
-    - content_strategy_development
+    - creative_concept_development
+    - artist_lineup_curation
+    - social_media_strategy_development
     - persuasive_copywriting
-    - visual_identity_development
-    - operational_planning
-    - production_planning
+    - visual_concept_design
+    - strategic_project_management
+    - production_coordination
     - commercial_development
-  dependencies: [experience_design_development, event_programming_design, content_strategy_development, persuasive_copywriting, visual_identity_development, operational_planning, production_planning, commercial_development]
+  dependencies: [creative_concept_development, artist_lineup_curation, social_media_strategy_development, persuasive_copywriting, visual_concept_design, strategic_project_management, production_coordination, commercial_development]
   parallel_execution: false
   inputs:
     - selected_concept
