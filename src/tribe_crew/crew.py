@@ -24,50 +24,32 @@ logger = logging.getLogger(__name__)
 # Load environment variables
 load_dotenv(override=True)
 
-# Import enhanced tools (these would need to be implemented)
-try:
-    from .tools.enhanced_tools import (
-        PerplexityDeepResearchTool,
-        FileReadTool,
-        FolderReadTool,
-        CompanyKnowledgeBaseTool,
-        RAGManager,
-        DocumentAnalysisTool,
-        BrandAnalysisTool,
-        CompetitorAnalysisTool,
-        AudienceResearchTool,
-        InnovationFrameworkTool,
-        ExperienceDesignTool,
-        VisualIdentityTool,
-        DutchVenueDatabaseTool,
-        ProductionPlanningTool,
-        CommercialPositioningTool
-    )
-except ImportError:
-    logger.warning("Enhanced tools not available, using basic fallbacks")
-    from .tools.tools import (
-        PerplexityTool as PerplexityDeepResearchTool,
-        FileReadTool,
-        FolderReadTool,
-        CompanyKnowledgeBaseTool,
-        RAGManager
-    )
-    # Create placeholder classes for missing tools
-    class PlaceholderTool(BaseTool):
-        name: str = "placeholder_tool"
-        description: str = "Placeholder tool"
-        def _run(self, *args, **kwargs): return "Tool not implemented"
-    
-    DocumentAnalysisTool = PlaceholderTool
-    BrandAnalysisTool = PlaceholderTool
-    CompetitorAnalysisTool = PlaceholderTool
-    AudienceResearchTool = PlaceholderTool
-    InnovationFrameworkTool = PlaceholderTool
-    ExperienceDesignTool = PlaceholderTool
-    VisualIdentityTool = PlaceholderTool
-    DutchVenueDatabaseTool = PlaceholderTool
-    ProductionPlanningTool = PlaceholderTool
-    CommercialPositioningTool = PlaceholderTool
+# Import tools from the available tools module
+logger.warning("Enhanced tools not available, using basic fallbacks")
+from .tools.tools import (
+    PerplexityTool as PerplexityDeepResearchTool,
+    FileReadTool,
+    FolderReadTool,
+    CompanyKnowledgeBaseTool,
+    RAGManager
+)
+
+# Create placeholder classes for missing tools
+class PlaceholderTool(BaseTool):
+    name: str = "placeholder_tool"
+    description: str = "Placeholder tool"
+    def _run(self, *args, **kwargs): return "Tool not implemented"
+
+DocumentAnalysisTool = PlaceholderTool
+BrandAnalysisTool = PlaceholderTool
+CompetitorAnalysisTool = PlaceholderTool
+AudienceResearchTool = PlaceholderTool
+InnovationFrameworkTool = PlaceholderTool
+ExperienceDesignTool = PlaceholderTool
+VisualIdentityTool = PlaceholderTool
+DutchVenueDatabaseTool = PlaceholderTool
+ProductionPlanningTool = PlaceholderTool
+CommercialPositioningTool = PlaceholderTool
 
 
 class ConfigurationManager:

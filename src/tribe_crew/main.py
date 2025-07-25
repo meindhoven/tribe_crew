@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 sys.path.append(str(Path(__file__).parent))
 
 try:
-    from crew import create_enhanced_crew, EnvironmentValidator
+    from .crew import create_enhanced_crew, EnvironmentValidator
 except ImportError as e:
     logger.error(f"Failed to import enhanced crew: {e}")
     sys.exit(1)
