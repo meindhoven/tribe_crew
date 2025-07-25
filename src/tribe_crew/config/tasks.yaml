@@ -1,17 +1,124 @@
-research_task:
-  description: >
-    Conduct a thorough research about {topic}
-    Make sure you find any interesting and relevant information given
-    the current year is {current_year}.
-  expected_output: >
-    A list with 10 bullet points of the most relevant information about {topic}
-  agent: researcher
+# --- tasks.yaml ---
+# This file defines the tasks and how they connect to the agents.
+# The 'context' field for a task will often be the output of a previous task.
+# Your main Python script will manage passing the context between tasks.
 
-reporting_task:
+# --- Phase A & B Tasks (Debrief and Concepting Crew) ---
+
+brief_analysis_task:
   description: >
-    Review the context you got and expand each topic into a full section for a report.
-    Make sure the report is detailed and contains any and all relevant information.
+    Analyze the client briefing document provided in '{briefing_doc_path}'.
+    Identify the event type, assess the brief's completeness, and generate a list
+    of clarifying questions for the client.
   expected_output: >
-    A fully fledged report with the main topics, each with a full section of information.
-    Formatted as markdown without '```'
-  agent: reporting_analyst
+    A preliminary analysis report containing the event type, a completeness
+    assessment, and a list of follow-up questions.
+  agent: briefing_analyst
+
+client_and_competitor_research_task:
+  description: >
+    Using the client's name '{client_name}' and the initial brief analysis,
+    conduct in-depth research. Investigate the client's brand, values, and past events.
+    Identify their main competitors in the Dutch market and analyze their recent events.
+  expected_output: >
+    A research summary detailing the client's profile, past events, and a
+    competitive analysis with opportunities for differentiation.
+  agent: market_researcher
+  context:
+    - brief_analysis_task
+
+audience_analysis_task:
+  description: >
+    Based on the initial brief analysis and the market research, create a detailed
+    profile of the target audience. Develop audience personas and analyze their needs,
+    desires, and expectations within the Dutch cultural context.
+  expected_output: >
+    A "Target Audience Profile" document with detailed personas and analysis of
+    their motivations.
+  agent: audience_analyst
+  context:
+    - brief_analysis_task
+    - client_and_competitor_research_task
+
+debrief_synthesis_task:
+  description: >
+    Combine all the reports from the analysis and research tasks into one
+    cohesive "Structured Debrief" document. The document must be well-organized
+    and end with key strategic insights and a honed desired outcome for the event.
+  expected_output: >
+    A final, comprehensive "Structured Debrief" document that will serve as the
+    foundation for the creative phase.
+  agent: debrief_synthesizer
+  context:
+    - brief_analysis_task
+    - client_and_competitor_research_task
+    - audience_analysis_task
+
+creative_concepting_task:
+  description: >
+    Using the "Structured Debrief" document, brainstorm and develop three unique
+    creative directions for the event. Each direction must have a theme, a core
+    engagement mechanic, and a clear rationale. Reference our company's past
+    successes and brand ethos.
+  expected_output: >
+    A document presenting three distinct creative directions, each with a
+    working title, a short description, and key features.
+  agent: creative_strategist
+  context:
+    - debrief_synthesis_task
+
+concept_refinement_task:
+  description: >
+    Take the three raw creative directions and flesh them out into compelling,
+    structured proposals. For each concept, write a narrative explaining the
+    attendee journey and format it cleanly for the human review team.
+  expected_output: >
+    A polished document containing three fully-formed event concepts, ready for
+    presentation to the human creative team.
+  agent: concept_refiner
+  context:
+    - creative_concepting_task
+
+# --- Phase D Tasks (Proposal Development Crew) ---
+# This crew would be initiated after the human-in-the-loop step.
+# The input would be the '{selected_concept}' and '{human_feedback}'.
+
+visual_development_task:
+  description: >
+    Based on the selected concept '{selected_concept}' and feedback '{human_feedback}',
+    develop a visual identity and mood board that captures the event's essence.
+  expected_output: >
+    A mood board (as a file path or description) and a summary of the visual identity.
+  agent: art_director
+
+copywriting_task:
+  description: >
+    Write the client-facing copy for the pitch document. The copy should be persuasive
+    and clearly articulate the vision and value of the selected concept '{selected_concept}'.
+    Incorporate the feedback '{human_feedback}'.
+  expected_output: >
+    All necessary text for the final pitch document, including headlines, concept
+    description, and key messaging.
+  agent: copywriter
+
+production_planning_task:
+  description: >
+    Create a high-level production plan for the selected concept '{selected_concept}'.
+    Outline a preliminary timeline and list key logistical and budgetary considerations
+    to be aware of.
+  expected_output: >
+    A document outlining the preliminary production timeline and key logistical points.
+  agent: event_producer
+
+final_pitch_assembly_task:
+  description: >
+    Assemble the contributions from the Art Director, Copywriter, and Producer into
+    a single, polished "Commercial Pitch Document". Ensure the document is cohesive,
+    professional, and ready for the Project Director's final review.
+  expected_output: >
+    A complete, client-ready pitch document in a structured format.
+  agent: proposal_manager
+  context:
+    - visual_development_task
+    - copywriting_task
+    - production_planning_task
