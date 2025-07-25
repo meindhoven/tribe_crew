@@ -1,25 +1,62 @@
 #!/usr/bin/env python
 # main.py
-# This is the main execution script for the Event Pitch Crew.
+# This is the main execution script for the Event Pitch Crew with enhanced folder-based input and RAG support.
 
 from crew import EventPitchCrew
 import json
 import os
 from datetime import datetime
+from pathlib import Path
 
 class EventPitchOrchestrator:
-    """Orchestrates the event pitch development process with proper handover management"""
+    """Orchestrates the event pitch development process with proper handover management and folder-based inputs"""
     
     def __init__(self):
         self.event_crew_manager = EventPitchCrew()
-        self.handover_data = {}
         self.results_dir = "results"
-        self.ensure_results_directory()
+        self.input_dir = "input_files"
+        self.knowledge_dir = "knowledge_base"
+        self.ensure_directories()
     
-    def ensure_results_directory(self):
-        """Create results directory if it doesn't exist"""
-        if not os.path.exists(self.results_dir):
-            os.makedirs(self.results_dir)
+    def ensure_directories(self):
+        """Create necessary directories if they don't exist"""
+        directories = [self.results_dir, self.input_dir, self.knowledge_dir]
+        for directory in directories:
+            if not os.path.exists(directory):
+                os.makedirs(directory)
+                print(f"Created directory: {directory}")
+    
+    def check_input_files(self) -> bool:
+        """Check if there are any files in the input_files directory"""
+        input_path = Path(self.input_dir)
+        allowed_extensions = {'.txt', '.md', '.pdf', '.doc', '.docx', '.json', '.yaml', '.yml'}
+        
+        for file_path in input_path.glob('*'):
+            if file_path.is_file() and file_path.suffix.lower() in allowed_extensions:
+                return True
+        return False
+    
+    def list_input_files(self) -> list:
+        """List all valid files in the input_files directory"""
+        input_path = Path(self.input_dir)
+        allowed_extensions = {'.txt', '.md', '.pdf', '.doc', '.docx', '.json', '.yaml', '.yml'}
+        files = []
+        
+        for file_path in input_path.glob('*'):
+            if file_path.is_file() and file_path.suffix.lower() in allowed_extensions:
+                files.append(file_path.name)
+        
+        return files
+    
+    def check_knowledge_base(self) -> bool:
+        """Check if there are any files in the knowledge_base directory"""
+        knowledge_path = Path(self.knowledge_dir)
+        allowed_extensions = {'.txt', '.md', '.pdf', '.doc', '.docx', '.json', '.yaml', '.yml'}
+        
+        for file_path in knowledge_path.glob('*'):
+            if file_path.is_file() and file_path.suffix.lower() in allowed_extensions:
+                return True
+        return False
     
     def save_results(self, data, filename):
         """Save results to file for handover purposes"""
@@ -40,14 +77,37 @@ class EventPitchOrchestrator:
         print("## Welcome to the Creative Event Pitch Crew! ##")
         print("------------------------------------------------")
         
+        # Check for input files
+        if not self.check_input_files():
+            print(f"\n⚠️  No briefing documents found in the '{self.input_dir}' folder!")
+            print(f"Please place your client briefing documents in the '{self.input_dir}' folder.")
+            print("Supported formats: .txt, .md, .pdf, .doc, .docx, .json, .yaml, .yml")
+            
+            choice = input("\nWould you like to continue anyway? (y/n): ").strip().lower()
+            if choice != 'y':
+                print("Exiting. Please add briefing documents and try again.")
+                return None
+        else:
+            files = self.list_input_files()
+            print(f"\n📁 Found {len(files)} briefing document(s) in '{self.input_dir}':")
+            for file in files:
+                print(f"  • {file}")
+        
+        # Check knowledge base
+        if not self.check_knowledge_base():
+            print(f"\n📚 No files found in the '{self.knowledge_dir}' folder.")
+            print("Consider adding company knowledge, past projects, and brand documents for better results.")
+        else:
+            print(f"\n📚 Knowledge base folder '{self.knowledge_dir}' contains company information.")
+        
         # Phase 1: Debrief and Concepting
         print("\n🚀 Phase 1: Debrief and Concepting 🚀")
-        briefing_doc_path = input("Enter the path to the client briefing document: ")
         client_name = input("Enter the client's name: ")
 
         inputs_crew1 = {
-            'briefing_doc_path': briefing_doc_path,
-            'client_name': client_name
+            'client_name': client_name,
+            'input_folder': self.input_dir,
+            'knowledge_folder': self.knowledge_dir
         }
 
         print("\n🚀 Kicking off the Debrief and Concepting Crew... 🚀\n")
@@ -98,14 +158,37 @@ class EventPitchOrchestrator:
         print("## Welcome to the Integrated Event Pitch Crew! ##")
         print("------------------------------------------------")
         
-        briefing_doc_path = input("Enter the path to the client briefing document: ")
-        client_name = input("Enter the client's name: ")
+        # Check for input files
+        if not self.check_input_files():
+            print(f"\n⚠️  No briefing documents found in the '{self.input_dir}' folder!")
+            print(f"Please place your client briefing documents in the '{self.input_dir}' folder.")
+            print("Supported formats: .txt, .md, .pdf, .doc, .docx, .json, .yaml, .yml")
+            
+            choice = input("\nWould you like to continue anyway? (y/n): ").strip().lower()
+            if choice != 'y':
+                print("Exiting. Please add briefing documents and try again.")
+                return None
+        else:
+            files = self.list_input_files()
+            print(f"\n📁 Found {len(files)} briefing document(s) in '{self.input_dir}':")
+            for file in files:
+                print(f"  • {file}")
+        
+        # Check knowledge base
+        if not self.check_knowledge_base():
+            print(f"\n📚 No files found in the '{self.knowledge_dir}' folder.")
+            print("Consider adding company knowledge, past projects, and brand documents for better results.")
+        else:
+            print(f"\n📚 Knowledge base folder '{self.knowledge_dir}' contains company information.")
+        
+        client_name = input("\nEnter the client's name: ")
         selected_concept = input("Which concept should be prioritized? (optional - leave blank for AI decision): ")
         human_feedback = input("Any initial feedback or requirements? (optional): ")
 
         inputs = {
-            'briefing_doc_path': briefing_doc_path,
             'client_name': client_name,
+            'input_folder': self.input_dir,
+            'knowledge_folder': self.knowledge_dir,
             'selected_concept': selected_concept or "Best concept based on strategic fit",
             'human_feedback': human_feedback or "Follow the strategic brief and ensure professional presentation"
         }
