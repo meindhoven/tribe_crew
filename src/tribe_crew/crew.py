@@ -49,14 +49,24 @@ class EventPitchCrew:
             )
         except Exception as e:
             print(f"Warning: Could not initialize advanced memory systems: {e}")
+            print("Falling back to basic memory configuration.")
             self.short_term_memory = None
             self.long_term_memory = None
+
+    def _safe_get_agent_config(self, agent_name: str):
+        """Safely get agent configuration with error handling"""
+        try:
+            return self.agents_config[agent_name]
+        except KeyError:
+            raise ValueError(f"Agent '{agent_name}' not found in agents.yaml configuration")
+        except Exception as e:
+            raise ValueError(f"Error loading agent '{agent_name}' configuration: {e}")
 
     # --- Define Agents ---
     @agent
     def project_director(self) -> Agent:
         agent_config = Agent(
-            config=self.agents_config['project_director'],
+            config=self._safe_get_agent_config('project_director'),
             verbose=True
         )
         
@@ -69,7 +79,7 @@ class EventPitchCrew:
     @agent
     def briefing_analyst(self) -> Agent:
         agent_config = Agent(
-            config=self.agents_config['briefing_analyst'],
+            config=self._safe_get_agent_config('briefing_analyst'),
             tools=[self.folder_read_tool, self.file_read_tool],  # Added FolderReadTool for scanning input_files
             verbose=True
         )
@@ -83,7 +93,7 @@ class EventPitchCrew:
     @agent
     def market_researcher(self) -> Agent:
         agent_config = Agent(
-            config=self.agents_config['market_researcher'],
+            config=self._safe_get_agent_config('market_researcher'),
             tools=[self.perplexity_tool],  # Now uses sonar-deep-research model
             verbose=True
         )
@@ -97,7 +107,7 @@ class EventPitchCrew:
     @agent
     def audience_analyst(self) -> Agent:
         agent_config = Agent(
-            config=self.agents_config['audience_analyst'],
+            config=self._safe_get_agent_config('audience_analyst'),
             verbose=True
         )
         
@@ -110,7 +120,7 @@ class EventPitchCrew:
     @agent
     def debrief_synthesizer(self) -> Agent:
         agent_config = Agent(
-            config=self.agents_config['debrief_synthesizer'],
+            config=self._safe_get_agent_config('debrief_synthesizer'),
             verbose=True
         )
         
@@ -123,7 +133,7 @@ class EventPitchCrew:
     @agent
     def creative_strategist(self) -> Agent:
         agent_config = Agent(
-            config=self.agents_config['creative_strategist'],
+            config=self._safe_get_agent_config('creative_strategist'),
             tools=[self.company_knowledge_tool],  # Now uses RAG-enabled knowledge base tool
             verbose=True
         )
@@ -137,7 +147,7 @@ class EventPitchCrew:
     @agent
     def concept_refiner(self) -> Agent:
         agent_config = Agent(
-            config=self.agents_config['concept_refiner'],
+            config=self._safe_get_agent_config('concept_refiner'),
             verbose=True
         )
         
@@ -150,7 +160,7 @@ class EventPitchCrew:
     @agent
     def proposal_manager(self) -> Agent:
         agent_config = Agent(
-            config=self.agents_config['proposal_manager'],
+            config=self._safe_get_agent_config('proposal_manager'),
             verbose=True
         )
         
@@ -163,7 +173,7 @@ class EventPitchCrew:
     @agent
     def art_director(self) -> Agent:
         agent_config = Agent(
-            config=self.agents_config['art_director'],
+            config=self._safe_get_agent_config('art_director'),
             verbose=True
         )
         
@@ -176,7 +186,7 @@ class EventPitchCrew:
     @agent
     def copywriter(self) -> Agent:
         agent_config = Agent(
-            config=self.agents_config['copywriter'],
+            config=self._safe_get_agent_config('copywriter'),
             verbose=True
         )
         
@@ -189,7 +199,7 @@ class EventPitchCrew:
     @agent
     def event_producer(self) -> Agent:
         agent_config = Agent(
-            config=self.agents_config['event_producer'],
+            config=self._safe_get_agent_config('event_producer'),
             verbose=True
         )
         

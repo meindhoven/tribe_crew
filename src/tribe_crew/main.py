@@ -2,7 +2,7 @@
 # main.py
 # This is the main execution script for the Event Pitch Crew with enhanced folder-based input and RAG support.
 
-from crew import EventPitchCrew
+from .crew import EventPitchCrew
 import json
 import os
 from datetime import datetime
@@ -17,14 +17,25 @@ class EventPitchOrchestrator:
         self.input_dir = "input_files"
         self.knowledge_dir = "knowledge_base"
         self.ensure_directories()
+        self._validate_environment()
     
     def ensure_directories(self):
         """Create necessary directories if they don't exist"""
-        directories = [self.results_dir, self.input_dir, self.knowledge_dir]
+        directories = [self.results_dir, self.input_dir, self.knowledge_dir, "rag_storage"]
         for directory in directories:
-            if not os.path.exists(directory):
-                os.makedirs(directory)
-                print(f"Created directory: {directory}")
+            try:
+                if not os.path.exists(directory):
+                    os.makedirs(directory, exist_ok=True)
+                    print(f"Created directory: {directory}")
+                # Ensure directories are writable
+                if not os.access(directory, os.W_OK):
+                    print(f"Warning: Directory '{directory}' is not writable")
+            except PermissionError:
+                print(f"Error: Permission denied creating directory '{directory}'")
+                raise
+            except Exception as e:
+                print(f"Error creating directory '{directory}': {e}")
+                raise
     
     def check_input_files(self) -> bool:
         """Check if there are any files in the input_files directory"""
@@ -207,6 +218,36 @@ class EventPitchOrchestrator:
         print("------------------------------------------------")
 
         return final_results
+
+    def _validate_environment(self):
+        """Validate environment configuration and API keys"""
+        required_keys = ['PERPLEXITY_API_KEY', 'GEMINI_API_KEY']
+        missing_keys = []
+        invalid_keys = []
+        
+        for key in required_keys:
+            value = os.getenv(key)
+            if not value:
+                missing_keys.append(key)
+            elif value == f"your_{key.lower()}_here" or len(value) < 10:
+                invalid_keys.append(key)
+        
+        if missing_keys or invalid_keys:
+            print("⚠️  Environment Configuration Issues:")
+            if missing_keys:
+                print(f"   Missing API keys: {', '.join(missing_keys)}")
+            if invalid_keys:
+                print(f"   Invalid API keys (still using template values): {', '.join(invalid_keys)}")
+            print("\n🔧 To fix:")
+            print("   1. Copy .env.example to .env: cp .env.example .env")
+            print("   2. Edit .env file and add your actual API keys")
+            print("   3. Get Perplexity key: https://www.perplexity.ai/settings/api")
+            print("   4. Get Gemini key: https://makersuite.google.com/app/apikey")
+            
+            choice = input("\nContinue anyway? (y/n): ").strip().lower()
+            if choice != 'y':
+                print("Exiting. Please set up your API keys and try again.")
+                exit(1)
 
 def main():
     """Main execution function with user choice"""
