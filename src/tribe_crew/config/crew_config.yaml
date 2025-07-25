@@ -1,0 +1,58 @@
+# crew_config.yaml
+# Configuration for CrewAI execution settings and crew management
+
+# General Crew Settings
+general:
+  max_execution_time: 3600  # 1 hour in seconds
+  max_rpm: 30  # Requests per minute
+  verbose: 2
+  allow_delegation: true
+  memory: true
+
+# Project Director Settings
+project_director:
+  manager_llm: null  # Use default LLM or specify custom
+  temperature: 0.7
+  max_tokens: 2000
+  delegation_enabled: true
+  quality_control: true
+
+# Crew Execution Settings
+crew_settings:
+  debrief_and_concept:
+    process: hierarchical
+    max_iterations: 3
+    planning_enabled: true
+    step_callback: true
+    
+  proposal_development:
+    process: hierarchical
+    max_iterations: 2
+    planning_enabled: true
+    step_callback: true
+    
+  integrated:
+    process: hierarchical
+    max_iterations: 5
+    planning_enabled: true
+    step_callback: true
+
+# Output Settings
+output:
+  save_results: true
+  results_directory: "results"
+  format: "markdown"
+  include_metadata: true
+  
+# Handover Settings
+handover:
+  enable_context_preservation: true
+  include_task_outputs: true
+  format_structured: true
+  
+# Quality Control
+quality_control:
+  enable_validation: true
+  min_word_count: 500
+  max_word_count: 5000
+  check_completeness: true

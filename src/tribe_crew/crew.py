@@ -22,6 +22,13 @@ class EventPitchCrew:
 
     # --- Define Agents ---
     @agent
+    def project_director(self) -> Agent:
+        return Agent(
+            config=self.agents_config['project_director'],
+            verbose=True
+        )
+
+    @agent
     def briefing_analyst(self) -> Agent:
         return Agent(
             config=self.agents_config['briefing_analyst'],
@@ -137,6 +144,13 @@ class EventPitchCrew:
             agent=self.concept_refiner()
         )
 
+    @task
+    def concept_handover_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['concept_handover_task'],
+            agent=self.debrief_synthesizer()
+        )
+
     # --- Proposal Development Tasks ---
     @task
     def visual_development_task(self) -> Task:
@@ -169,7 +183,7 @@ class EventPitchCrew:
     # --- Define Crews ---
     @crew
     def debrief_and_concept_crew(self) -> Crew:
-        """Creates the debrief and concepting crew"""
+        """Creates the debrief and concepting crew with proper manager"""
         return Crew(
             agents=[
                 self.briefing_analyst(),
@@ -185,16 +199,17 @@ class EventPitchCrew:
                 self.audience_analysis_task(),
                 self.debrief_synthesis_task(),
                 self.creative_concepting_task(),
-                self.concept_refinement_task()
+                self.concept_refinement_task(),
+                self.concept_handover_task()
             ],
             process=Process.hierarchical,
-            manager_llm=None, # You can specify a manager LLM here if needed
+            manager_agent=self.project_director(),
             verbose=2
         )
 
     @crew
     def proposal_development_crew(self) -> Crew:
-        """Creates the proposal development crew"""
+        """Creates the proposal development crew with proper manager"""
         return Crew(
             agents=[
                 self.proposal_manager(),
@@ -209,6 +224,40 @@ class EventPitchCrew:
                 self.final_pitch_assembly_task()
             ],
             process=Process.hierarchical,
-            manager_llm=None,
+            manager_agent=self.project_director(),
+            verbose=2
+        )
+
+    @crew
+    def integrated_event_pitch_crew(self) -> Crew:
+        """Creates an integrated crew that handles the entire process from debrief to final pitch"""
+        return Crew(
+            agents=[
+                self.briefing_analyst(),
+                self.market_researcher(),
+                self.audience_analyst(),
+                self.debrief_synthesizer(),
+                self.creative_strategist(),
+                self.concept_refiner(),
+                self.proposal_manager(),
+                self.art_director(),
+                self.copywriter(),
+                self.event_producer()
+            ],
+            tasks=[
+                self.brief_analysis_task(),
+                self.client_and_competitor_research_task(),
+                self.audience_analysis_task(),
+                self.debrief_synthesis_task(),
+                self.creative_concepting_task(),
+                self.concept_refinement_task(),
+                self.concept_handover_task(),
+                self.visual_development_task(),
+                self.copywriting_task(),
+                self.production_planning_task(),
+                self.final_pitch_assembly_task()
+            ],
+            process=Process.hierarchical,
+            manager_agent=self.project_director(),
             verbose=2
         )
