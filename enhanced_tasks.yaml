@@ -1,0 +1,605 @@
+# Enhanced Tasks Configuration for Creative Event Organizer
+# Hierarchical workflow with dependencies, parallel execution, and quality gates
+
+# =============================================================================
+# EXECUTIVE ORCHESTRATION TASKS
+# =============================================================================
+
+executive_project_initiation:
+  description: >
+    Initialize the project by setting strategic direction, quality standards, and
+    success criteria. Review initial client briefing materials and establish project
+    parameters. Coordinate with management tier leaders to ensure alignment on
+    objectives, timeline, and deliverables. Set expectations for quality gates
+    and approval processes throughout the workflow.
+  expected_output: >
+    Project charter document with strategic direction, quality standards, success
+    criteria, timeline parameters, and coordination framework for management tier.
+    Includes initial briefing assessment and project scope definition.
+  agent: executive_director
+  dependencies: []
+  parallel_execution: false
+
+executive_quality_review:
+  description: >
+    Conduct comprehensive quality review of all phase deliverables to ensure
+    strategic alignment, commercial viability, and excellence standards are met.
+    Review the structured debrief, creative concepts, and final proposal for
+    consistency, quality, and strategic coherence. Provide final approval or
+    request revisions to meet quality standards.
+  expected_output: >
+    Executive quality assessment report with approval status, quality scores,
+    strategic alignment validation, and any revision requirements. Final sign-off
+    on deliverables or detailed feedback for improvements.
+  agent: executive_director
+  context:
+    - phase_a_completion
+    - phase_b_completion
+    - phase_d_completion
+  dependencies: [phase_a_completion, phase_b_completion, phase_d_completion]
+  parallel_execution: false
+
+# =============================================================================
+# PHASE A: STRATEGIC ANALYSIS (LED BY ANALYSIS MANAGER)
+# =============================================================================
+
+analysis_manager_coordination:
+  description: >
+    Coordinate Phase A strategic analysis by delegating research tasks to specialist
+    agents, setting quality standards, and ensuring comprehensive coverage of all
+    research areas. Monitor progress across all research streams and synthesize
+    insights to prepare strategic foundation for creative development. Ensure
+    cultural relevance and market appropriateness for Dutch audience.
+  expected_output: >
+    Phase A coordination report with task delegation plan, quality standards,
+    progress monitoring framework, and strategic synthesis approach. Includes
+    timeline for research completion and quality checkpoints.
+  agent: analysis_manager
+  context:
+    - executive_project_initiation
+  dependencies: [executive_project_initiation]
+  parallel_execution: false
+
+# Parallel Research Tasks (Coordinated by Analysis Manager)
+briefing_analysis_task:
+  description: >
+    Thoroughly analyze all client briefing documents found in the input_files folder
+    using advanced document analysis tools. Extract key requirements, assess completeness,
+    identify gaps, and formulate clarifying questions. Analyze event type, objectives,
+    target audience, budget constraints, and success metrics. Create comprehensive
+    requirement extraction report.
+  expected_output: >
+    Comprehensive briefing analysis report with event type classification, requirement
+    extraction, completeness assessment, gap analysis, and prioritized list of
+    clarifying questions for the client. Includes preliminary scope and constraint analysis.
+  agent: briefing_analyst
+  context:
+    - analysis_manager_coordination
+  dependencies: [analysis_manager_coordination]
+  parallel_execution: true
+
+market_research_task:
+  description: >
+    Conduct deep market research on the Dutch events industry, including current
+    trends, market dynamics, industry challenges, and growth opportunities.
+    Use Perplexity deep research to analyze market positioning, industry reports,
+    and economic factors affecting the Dutch corporate events landscape.
+  expected_output: >
+    Comprehensive market research report covering Dutch events industry trends,
+    market dynamics, key challenges, growth opportunities, economic factors,
+    and strategic positioning insights relevant to the client's industry sector.
+  agent: market_researcher
+  context:
+    - analysis_manager_coordination
+  dependencies: [analysis_manager_coordination]
+  parallel_execution: true
+
+client_analysis_task:
+  description: >
+    Conduct deep analysis of the client organization using brand analysis tools
+    and stakeholder mapping. Research their brand identity, corporate culture,
+    values, mission, recent developments, and organizational dynamics. Analyze
+    their communication style, brand positioning, and corporate personality.
+  expected_output: >
+    Detailed client analysis report including brand identity assessment, corporate
+    culture analysis, stakeholder mapping, organizational dynamics, brand positioning,
+    and recommendations for event alignment with client values and objectives.
+  agent: client_analyst
+  context:
+    - briefing_analysis_task
+  dependencies: [briefing_analysis_task]
+  parallel_execution: true
+
+competitor_research_task:
+  description: >
+    Analyze key competitors in the client's industry and Dutch events landscape.
+    Research competitor events, strategies, positioning, and market share. Identify
+    successful event formats, innovative approaches, and differentiation opportunities.
+    Use event databases and social media monitoring for comprehensive analysis.
+  expected_output: >
+    Competitive analysis report with competitor event analysis, strategy assessment,
+    market positioning comparison, differentiation opportunities, and strategic
+    recommendations for competitive advantage in the Dutch market.
+  agent: competitor_researcher
+  context:
+    - client_analysis_task
+  dependencies: [client_analysis_task]
+  parallel_execution: true
+
+audience_analysis_task:
+  description: >
+    Develop comprehensive target audience profiles using cultural analysis frameworks
+    and persona generation tools. Analyze Dutch cultural preferences, B2B audience
+    behavior, communication styles, and engagement preferences. Create detailed
+    personas with motivations, needs, and expectations.
+  expected_output: >
+    Target audience analysis with detailed personas, cultural preference analysis,
+    behavioral insights, communication style preferences, engagement expectations,
+    and recommendations for audience-centric event design in Dutch context.
+  agent: audience_analyst
+  context:
+    - briefing_analysis_task
+    - market_research_task
+  dependencies: [briefing_analysis_task, market_research_task]
+  parallel_execution: true
+
+strategic_debrief_synthesis:
+  description: >
+    Synthesize all research outputs into a comprehensive strategic debrief document
+    that serves as the foundation for creative development. Connect insights across
+    research streams, identify strategic opportunities, and create actionable
+    recommendations. Develop strategic narrative and foundation for concept development.
+  expected_output: >
+    Comprehensive Strategic Debrief Document with synthesized insights, strategic
+    opportunities, actionable recommendations, strategic narrative, and clear
+    foundation for creative concept development. Includes executive summary and
+    key strategic directions.
+  agent: debrief_synthesizer
+  context:
+    - briefing_analysis_task
+    - market_research_task
+    - client_analysis_task
+    - competitor_research_task
+    - audience_analysis_task
+  dependencies: [briefing_analysis_task, market_research_task, client_analysis_task, competitor_research_task, audience_analysis_task]
+  parallel_execution: false
+
+phase_a_completion:
+  description: >
+    Complete Phase A by reviewing all research outputs, validating strategic
+    insights, and preparing handover to creative phase. Ensure all research
+    areas are comprehensively covered and strategic foundation is solid.
+    Prepare Phase A summary and recommendations for creative development.
+  expected_output: >
+    Phase A completion report with strategic foundation summary, research validation,
+    quality assessment, and detailed handover package for creative phase including
+    key insights, strategic directions, and creative brief foundation.
+  agent: analysis_manager
+  context:
+    - strategic_debrief_synthesis
+  dependencies: [strategic_debrief_synthesis]
+  parallel_execution: false
+
+# =============================================================================
+# QUALITY GATE A: ANALYSIS REVIEW
+# =============================================================================
+
+quality_review_phase_a:
+  description: >
+    Conduct comprehensive quality review of Phase A deliverables to ensure research
+    completeness, strategic coherence, and foundation quality. Validate insights
+    accuracy, cultural relevance, and strategic soundness. Approve progression
+    to creative phase or request revisions.
+  expected_output: >
+    Quality assessment report for Phase A with completeness validation, strategic
+    coherence review, cultural accuracy check, and progression approval or
+    revision requirements for creative phase readiness.
+  agent: quality_assurance_manager
+  context:
+    - phase_a_completion
+  dependencies: [phase_a_completion]
+  parallel_execution: false
+
+# =============================================================================
+# PHASE B: CREATIVE CONCEPTING (LED BY CREATIVE MANAGER)
+# =============================================================================
+
+creative_manager_coordination:
+  description: >
+    Lead Phase B creative concepting by coordinating creative specialists to develop
+    three breakthrough event concepts. Set creative vision, innovation standards,
+    and ensure cultural relevance. Guide team toward concepts that are strategically
+    grounded, commercially viable, and creatively inspiring for Dutch market.
+  expected_output: >
+    Creative phase coordination plan with creative vision, innovation standards,
+    team coordination framework, concept development strategy, and quality criteria
+    for breakthrough event concepts aligned with strategic foundation.
+  agent: creative_manager
+  context:
+    - quality_review_phase_a
+  dependencies: [quality_review_phase_a]
+  parallel_execution: false
+
+# Parallel Creative Development Tasks
+creative_strategy_development:
+  description: >
+    Generate innovative event concepts using advanced creative frameworks and
+    innovation methodologies. Transform strategic insights into compelling
+    experiential designs that push creative boundaries while meeting business
+    objectives. Develop core concepts with unique value propositions.
+  expected_output: >
+    Creative strategy document with innovative event concepts, experiential design
+    frameworks, strategic alignment validation, and unique value propositions
+    for each concept direction with innovation rationale.
+  agent: creative_strategist
+  context:
+    - creative_manager_coordination
+  dependencies: [creative_manager_coordination]
+  parallel_execution: true
+
+brand_alignment_consultation:
+  description: >
+    Ensure all creative concepts align perfectly with client brand identity using
+    brand alignment tools and identity frameworks. Analyze brand expression
+    opportunities and validate authentic brand representation through event
+    experiences. Develop brand integration strategies.
+  expected_output: >
+    Brand alignment report with brand expression analysis, identity integration
+    strategies, authenticity validation, and recommendations for brand-consistent
+    experiential design across all concept directions.
+  agent: brand_consultant
+  context:
+    - creative_manager_coordination
+  dependencies: [creative_manager_coordination]
+  parallel_execution: true
+
+cultural_trend_analysis:
+  description: >
+    Analyze current Dutch cultural trends and European event innovations using
+    trend analysis tools and cultural research databases. Ensure concepts are
+    culturally relevant, forward-thinking, and positioned for future market
+    conditions. Identify cultural integration opportunities.
+  expected_output: >
+    Cultural trend analysis report with Dutch market cultural insights, European
+    innovation trends, future forecasting, cultural relevance validation, and
+    trend integration recommendations for concept development.
+  agent: trend_culture_expert
+  context:
+    - creative_manager_coordination
+  dependencies: [creative_manager_coordination]
+  parallel_execution: true
+
+concept_refinement_and_storytelling:
+  description: >
+    Transform raw creative concepts into compelling, detailed narratives using
+    storytelling frameworks and concept development tools. Create clear experiential
+    journeys, structured presentations, and engaging concept descriptions ready
+    for human creative team review.
+  expected_output: >
+    Three refined concept presentations with compelling narratives, detailed
+    experiential journeys, structured concept descriptions, visual frameworks,
+    and presentation materials ready for human creative team evaluation.
+  agent: concept_refiner
+  context:
+    - creative_strategy_development
+    - brand_alignment_consultation
+    - cultural_trend_analysis
+  dependencies: [creative_strategy_development, brand_alignment_consultation, cultural_trend_analysis]
+  parallel_execution: false
+
+phase_b_completion:
+  description: >
+    Complete Phase B by reviewing all creative outputs, validating concept quality,
+    and preparing three refined concepts for human creative team review. Ensure
+    concepts are strategically grounded, culturally relevant, and commercially
+    viable. Prepare handover package for human review.
+  expected_output: >
+    Phase B completion package with three refined event concepts, concept evaluation
+    matrix, strategic alignment validation, commercial viability assessment, and
+    comprehensive handover documentation for human creative team review.
+  agent: creative_manager
+  context:
+    - concept_refinement_and_storytelling
+  dependencies: [concept_refinement_and_storytelling]
+  parallel_execution: false
+
+# =============================================================================
+# QUALITY GATE B: CREATIVE REVIEW
+# =============================================================================
+
+quality_review_phase_b:
+  description: >
+    Conduct comprehensive quality review of creative concepts to ensure innovation
+    quality, strategic alignment, commercial viability, and cultural relevance.
+    Validate concept differentiation, feasibility, and market appropriateness.
+    Approve concepts for human review or request refinements.
+  expected_output: >
+    Creative quality assessment with innovation evaluation, strategic alignment
+    validation, commercial viability analysis, cultural relevance check, and
+    approval for human review or detailed refinement requirements.
+  agent: quality_assurance_manager
+  context:
+    - phase_b_completion
+  dependencies: [phase_b_completion]
+  parallel_execution: false
+
+# =============================================================================
+# HUMAN REVIEW HANDOVER
+# =============================================================================
+
+human_creative_team_handover:
+  description: >
+    Prepare comprehensive handover package for human creative team review including
+    strategic debrief summary, three refined concepts with detailed descriptions,
+    strategic recommendations, and evaluation framework. Facilitate smooth transition
+    from AI to human creative review process.
+  expected_output: >
+    Complete handover package with strategic debrief executive summary, three
+    concept presentations, evaluation criteria, strategic recommendations, and
+    guidance for human creative team review and concept selection process.
+  agent: creative_manager
+  context:
+    - quality_review_phase_b
+  dependencies: [quality_review_phase_b]
+  parallel_execution: false
+
+# =============================================================================
+# PHASE D: PROPOSAL DEVELOPMENT (LED BY PROPOSAL MANAGER)
+# =============================================================================
+# Note: This phase begins after human creative team selects concept and provides feedback
+
+proposal_manager_coordination:
+  description: >
+    Lead Phase D proposal development by coordinating specialist teams to transform
+    selected concept into comprehensive commercial proposal. Integrate human feedback,
+    ensure commercial viability, and manage timeline for client-ready deliverables.
+    Coordinate diverse contributions into cohesive proposal.
+  expected_output: >
+    Proposal development coordination plan with team assignments, integration
+    strategy, timeline management, quality standards, and framework for transforming
+    selected concept into compelling commercial proposal with human feedback integration.
+  agent: proposal_manager
+  context:
+    - human_creative_team_handover
+  dependencies: [human_creative_team_handover]
+  parallel_execution: false
+  inputs:
+    - selected_concept
+    - human_feedback
+
+# Parallel Proposal Development Tasks
+experience_design_development:
+  description: >
+    Design innovative event formats and engagement mechanisms that bring the
+    selected concept to life. Use experience design tools and engagement libraries
+    to create detailed experiential frameworks that are creatively ambitious
+    and operationally feasible. Develop innovative format proposals.
+  expected_output: >
+    Experience design document with innovative event formats, detailed engagement
+    mechanisms, experiential frameworks, operational feasibility analysis, and
+    creative implementation strategies for the selected concept.
+  agent: event_creative
+  context:
+    - proposal_manager_coordination
+  dependencies: [proposal_manager_coordination]
+  parallel_execution: true
+  inputs:
+    - selected_concept
+    - human_feedback
+
+event_programming_design:
+  description: >
+    Design detailed event programming and audience journey using programming
+    frameworks and journey mapping tools. Create optimal flow, content curation,
+    and engagement sequences that maximize attendee experience and deliver
+    key messages effectively throughout the event.
+  expected_output: >
+    Comprehensive event programming document with detailed audience journey,
+    content curation strategy, engagement sequences, flow optimization, and
+    programming timeline that ensures seamless attendee experience.
+  agent: creative_programmer
+  context:
+    - proposal_manager_coordination
+  dependencies: [proposal_manager_coordination]
+  parallel_execution: true
+  inputs:
+    - selected_concept
+    - human_feedback
+
+content_strategy_development:
+  description: >
+    Develop comprehensive content strategy and multi-media planning using content
+    frameworks and engagement optimization tools. Plan content across all touchpoints,
+    ensure consistency, and optimize for audience engagement throughout the
+    event experience lifecycle.
+  expected_output: >
+    Content strategy document with multi-media planning, touchpoint content mapping,
+    engagement optimization strategy, content consistency framework, and content
+    production timeline for all event communications and materials.
+  agent: content_creator
+  context:
+    - proposal_manager_coordination
+  dependencies: [proposal_manager_coordination]
+  parallel_execution: true
+  inputs:
+    - selected_concept
+    - human_feedback
+
+persuasive_copywriting:
+  description: >
+    Create compelling, persuasive copy for the pitch document using Dutch copywriting
+    frameworks and persuasion techniques. Develop messaging that clearly communicates
+    vision, value, and impact in culturally appropriate language that resonates
+    with Dutch business decision-makers.
+  expected_output: >
+    Complete copywriting package with persuasive pitch document copy, executive
+    summary, concept descriptions, value propositions, call-to-action, and all
+    client-facing text optimized for Dutch business culture and decision-making.
+  agent: copywriter
+  context:
+    - proposal_manager_coordination
+  dependencies: [proposal_manager_coordination]
+  parallel_execution: true
+  inputs:
+    - selected_concept
+    - human_feedback
+
+visual_identity_development:
+  description: >
+    Develop compelling visual identity and mood boards using visual design tools
+    and inspiration databases. Create design direction that captures event essence,
+    communicates concept effectively, and provides strong visual impact for
+    stakeholder presentations and client materials.
+  expected_output: >
+    Visual identity package with comprehensive mood boards, design direction,
+    visual concept rationale, color palettes, typography recommendations, and
+    visual frameworks that effectively communicate the event concept vision.
+  agent: art_director
+  context:
+    - proposal_manager_coordination
+  dependencies: [proposal_manager_coordination]
+  parallel_execution: true
+  inputs:
+    - selected_concept
+    - human_feedback
+
+operational_planning:
+  description: >
+    Develop comprehensive operational plans using Dutch venue databases and logistics
+    tools. Create venue strategies, logistics coordination, and operational frameworks
+    that ensure flawless execution within Dutch market context. Address practical
+    implementation requirements.
+  expected_output: >
+    Operational planning document with venue recommendations, logistics coordination
+    plans, operational frameworks, timeline management, resource requirements,
+    and practical implementation strategies for the Dutch market.
+  agent: event_manager
+  context:
+    - proposal_manager_coordination
+  dependencies: [proposal_manager_coordination]
+  parallel_execution: true
+  inputs:
+    - selected_concept
+    - human_feedback
+
+production_planning:
+  description: >
+    Create detailed production plans using production tools and vendor management
+    systems. Develop vendor coordination strategies, risk management frameworks,
+    and quality control processes that ensure successful event delivery while
+    maintaining budget control and timeline adherence.
+  expected_output: >
+    Production planning document with detailed vendor coordination, risk management
+    frameworks, quality control processes, budget management strategies, and
+    production timeline with milestone tracking and contingency planning.
+  agent: producer
+  context:
+    - proposal_manager_coordination
+  dependencies: [proposal_manager_coordination]
+  parallel_execution: true
+  inputs:
+    - selected_concept
+    - human_feedback
+
+commercial_development:
+  description: >
+    Develop compelling commercial positioning using value proposition frameworks
+    and pricing strategy tools. Create pricing strategies, ROI calculations,
+    and value propositions that maximize client value while ensuring project
+    profitability and competitive advantage in Dutch market.
+  expected_output: >
+    Commercial development package with value proposition framework, pricing
+    strategy, ROI calculations, competitive positioning, profitability analysis,
+    and commercial terms that deliver client value and business success.
+  agent: business_developer
+  context:
+    - proposal_manager_coordination
+  dependencies: [proposal_manager_coordination]
+  parallel_execution: true
+  inputs:
+    - selected_concept
+    - human_feedback
+
+# Final Assembly and Integration
+final_proposal_assembly:
+  description: >
+    Assemble all specialist contributions into comprehensive, client-ready commercial
+    pitch document. Ensure cohesive integration, professional presentation, and
+    strategic alignment. Create executive summary, implementation roadmap, and
+    compelling proposal that wins client approval.
+  expected_output: >
+    Complete Commercial Pitch Document with executive summary, strategic foundation,
+    creative concept presentation, visual identity, implementation timeline,
+    budget framework, operational plan, and compelling call-to-action ready
+    for client presentation and approval.
+  agent: proposal_manager
+  context:
+    - experience_design_development
+    - event_programming_design
+    - content_strategy_development
+    - persuasive_copywriting
+    - visual_identity_development
+    - operational_planning
+    - production_planning
+    - commercial_development
+  dependencies: [experience_design_development, event_programming_design, content_strategy_development, persuasive_copywriting, visual_identity_development, operational_planning, production_planning, commercial_development]
+  parallel_execution: false
+  inputs:
+    - selected_concept
+    - human_feedback
+
+phase_d_completion:
+  description: >
+    Complete Phase D by conducting final quality review of all proposal components,
+    ensuring integration quality, and preparing final deliverables. Validate
+    commercial viability, implementation feasibility, and client readiness.
+    Prepare executive presentation materials.
+  expected_output: >
+    Phase D completion package with final proposal validation, quality assessment,
+    commercial viability confirmation, implementation feasibility review, and
+    executive presentation materials ready for client delivery and approval.
+  agent: proposal_manager
+  context:
+    - final_proposal_assembly
+  dependencies: [final_proposal_assembly]
+  parallel_execution: false
+
+# =============================================================================
+# FINAL QUALITY GATE: PROPOSAL REVIEW
+# =============================================================================
+
+final_quality_review:
+  description: >
+    Conduct comprehensive final quality review of complete proposal package to
+    ensure excellence standards, strategic alignment, commercial viability, and
+    client readiness. Validate all components meet quality criteria and provide
+    final approval for client delivery.
+  expected_output: >
+    Final quality assessment with comprehensive proposal review, excellence validation,
+    strategic alignment confirmation, commercial viability assessment, and final
+    approval for client delivery or specific revision requirements.
+  agent: quality_assurance_manager
+  context:
+    - phase_d_completion
+  dependencies: [phase_d_completion]
+  parallel_execution: false
+
+# =============================================================================
+# PROJECT COMPLETION
+# =============================================================================
+
+project_completion:
+  description: >
+    Complete the entire project by conducting final executive review, ensuring
+    all objectives are met, and preparing project closure documentation. Validate
+    deliverable quality, strategic success, and client satisfaction potential.
+    Document lessons learned and project success metrics.
+  expected_output: >
+    Project completion report with executive review summary, objective achievement
+    validation, deliverable quality confirmation, strategic success assessment,
+    lessons learned documentation, and project closure with success metrics.
+  agent: executive_director
+  context:
+    - final_quality_review
+  dependencies: [final_quality_review]
+  parallel_execution: false
