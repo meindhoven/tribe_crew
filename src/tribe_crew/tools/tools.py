@@ -33,11 +33,15 @@ class FileChangeHandler(FileSystemEventHandler):
         self.rag_manager = rag_manager
         
     def on_modified(self, event):
-        if not event.is_directory and event.src_path.endswith(('.txt', '.md', '.pdf', '.doc', '.docx')):
+        if (not event.is_directory and 
+            event.src_path.endswith(('.txt', '.md', '.pdf', '.doc', '.docx')) and
+            not Path(event.src_path).name.lower() in {'readme.md', 'readme.txt'}):
             self.rag_manager.update_file_if_changed(event.src_path)
     
     def on_created(self, event):
-        if not event.is_directory and event.src_path.endswith(('.txt', '.md', '.pdf', '.doc', '.docx')):
+        if (not event.is_directory and 
+            event.src_path.endswith(('.txt', '.md', '.pdf', '.doc', '.docx')) and
+            not Path(event.src_path).name.lower() in {'readme.md', 'readme.txt'}):
             self.rag_manager.update_file_if_changed(event.src_path)
 
 class RAGManager:
@@ -348,10 +352,14 @@ class FolderReadTool(BaseTool):
             
             # Security: Only allow specific file extensions
             allowed_extensions = {'.txt', '.md', '.pdf', '.doc', '.docx', '.json', '.yaml', '.yml'}
+            # Ignore README files as they are documentation, not content to be processed
+            ignored_filenames = {'readme.md', 'readme.txt'}
             
             files_content = []
             for file_path in folder.glob('*'):
-                if file_path.is_file() and file_path.suffix.lower() in allowed_extensions:
+                if (file_path.is_file() and 
+                    file_path.suffix.lower() in allowed_extensions and 
+                    file_path.name.lower() not in ignored_filenames):
                     # Security: Check file size (max 10MB per file)
                     max_size = 10 * 1024 * 1024  # 10MB
                     if file_path.stat().st_size > max_size:
@@ -466,9 +474,13 @@ class CompanyKnowledgeBaseTool(BaseTool):
         """Perform initial scan of knowledge base folder"""
         try:
             allowed_extensions = {'.txt', '.md', '.pdf', '.doc', '.docx', '.json', '.yaml', '.yml'}
+            # Ignore README files as they are documentation, not content to be processed
+            ignored_filenames = {'readme.md', 'readme.txt'}
             
             for file_path in self.knowledge_folder.rglob('*'):
-                if file_path.is_file() and file_path.suffix.lower() in allowed_extensions:
+                if (file_path.is_file() and 
+                    file_path.suffix.lower() in allowed_extensions and 
+                    file_path.name.lower() not in ignored_filenames):
                     self.rag_manager.update_file_if_changed(str(file_path))
                     
         except Exception as e:
