@@ -12,6 +12,8 @@ from datetime import datetime
 from crewai.tools import BaseTool
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
+from crewai_tools import RagTool
+from crewai_tools.tools.base_tool import BaseTool
 
 # RAG and embedding imports
 try:
