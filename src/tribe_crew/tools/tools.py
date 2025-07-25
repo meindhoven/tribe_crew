@@ -248,65 +248,64 @@ class PerplexityTool(BaseTool):
 
     def _run(self, query: str) -> str:
         """
-        Executes a search query using the Perplexity API with sonar-deep-research model.
-        Requires PERPLEXITY_API_KEY to be set in the environment.
+        Search using Perplexity's sonar-deep-research model.
         """
-        # Input validation
-        if not query or not query.strip():
-            return "Error: Query cannot be empty."
-        
-        # Limit query length to prevent abuse
-        max_query_length = 1000
-        if len(query) > max_query_length:
-            return f"Error: Query too long (max {max_query_length} characters)."
-        
-        api_key = os.getenv("PERPLEXITY_API_KEY")
-        if not api_key:
-            return "Error: PERPLEXITY_API_KEY environment variable not set."
-        
-        # Basic API key format validation
-        if not api_key.startswith(('pplx-', 'sk-')) or len(api_key) < 10:
-            return "Error: Invalid PERPLEXITY_API_KEY format."
-
-        url = "https://api.perplexity.ai/chat/completions"
-        payload = {
-            "model": "sonar-deep-research",  # Updated to use sonar-deep-research model
-            "messages": [
-                {
-                    "role": "system",
-                    "content": "You are an AI research assistant. Provide comprehensive, detailed, and factual information with proper sourcing and analysis.",
-                },
-                {"role": "user", "content": query.strip()},
-            ],
-            "max_tokens": 4000,  # Increased for better research depth
-            "temperature": 0.1,   # Make responses more deterministic
-            "return_citations": True,
-            "return_images": False
-        }
-        headers = {
-            "accept": "application/json",
-            "content-type": "application/json",
-            "authorization": f"Bearer {api_key}",
-        }
-
         try:
-            # Add timeout to prevent hanging
-            response = requests.post(url, json=payload, headers=headers, timeout=60)  # Increased timeout for deep research
-            response.raise_for_status()
-            result = response.json()
+            # Input validation
+            if not query or not query.strip():
+                return "Error: Query cannot be empty."
             
-            # Extract the content from the response
-            if result.get('choices') and len(result['choices']) > 0:
-                content = result['choices'][0]['message']['content']
-                if content and content.strip():
-                    return content.strip()
-                else:
-                    return "No content found in Perplexity response."
-            else:
-                return "No content found in Perplexity response."
-                
+            # Limit query length to prevent abuse
+            max_query_length = 500
+            if len(query) > max_query_length:
+                return f"Error: Query too long (max {max_query_length} characters)."
+            
+            # Check API key
+            api_key = os.getenv("PERPLEXITY_API_KEY")
+            if not api_key:
+                return "Error: PERPLEXITY_API_KEY environment variable not set."
+            
+            # Validate API key format (basic check)
+            if not api_key.startswith(('pplx-', 'sk-')) or len(api_key) < 20:
+                return "Error: Invalid PERPLEXITY_API_KEY format. Please check your API key."
+            
+            url = "https://api.perplexity.ai/chat/completions"
+            
+            payload = {
+                "model": "sonar-deep-research",
+                "messages": [
+                    {
+                        "role": "user",
+                        "content": query.strip()
+                    }
+                ],
+                "max_tokens": 4000,  # Increased for deep research
+                "temperature": 0.2,
+                "top_p": 0.9,
+                "search_domain_filter": ["perplexity.ai"],
+                "return_images": False,
+                "return_related_questions": False,
+                "search_recency_filter": "month",
+                "top_k": 0,
+                "stream": False,
+                "presence_penalty": 0,
+                "frequency_penalty": 1
+            }
+            
+            headers = {
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json"
+            }
+            
+            # Make request with timeout
+            response = requests.post(url, json=payload, headers=headers, timeout=60)
+            response.raise_for_status()
+            
+            data = response.json()
+            return data['choices'][0]['message']['content']
+            
         except requests.exceptions.Timeout:
-            return "Error: Request to Perplexity API timed out."
+            return "Error: Request to Perplexity API timed out. Please try again."
         except requests.exceptions.ConnectionError:
             return "Error: Unable to connect to Perplexity API. Check your internet connection."
         except requests.exceptions.HTTPError as e:
@@ -320,6 +319,8 @@ class PerplexityTool(BaseTool):
             return f"Error calling Perplexity API: {e}"
         except ValueError as e:
             return f"Error: Invalid JSON response from Perplexity API: {e}"
+        except KeyError:
+            return "Error: Unexpected response format from Perplexity API"
         except Exception as e:
             return f"An unexpected error occurred: {e}"
 
@@ -423,32 +424,43 @@ class CompanyKnowledgeBaseTool(BaseTool):
     )
     
     def __init__(self, knowledge_folder: str = "./knowledge_base"):
-        super().__init__()
-        self.knowledge_folder = Path(knowledge_folder).resolve()
+        self.knowledge_folder = Path(knowledge_folder)
         self.knowledge_folder.mkdir(exist_ok=True)
         
         # Initialize RAG manager
         gemini_api_key = os.getenv("GEMINI_API_KEY")
         self.rag_manager = RAGManager(gemini_api_key=gemini_api_key)
         
-        # Initialize file monitoring
+        # Start file monitoring
         self.observer = None
-        self._setup_file_monitoring()
+        self._start_file_monitoring()
         
-        # Initial scan of knowledge base
+        # Perform initial scan
         self._initial_scan()
-    
-    def _setup_file_monitoring(self):
-        """Setup file system monitoring for the knowledge base folder"""
-        if HAS_RAG_DEPS:
-            try:
-                self.observer = Observer()
-                event_handler = FileChangeHandler(self.rag_manager)
-                self.observer.schedule(event_handler, str(self.knowledge_folder), recursive=True)
-                self.observer.start()
-                print(f"Started monitoring {self.knowledge_folder} for changes")
-            except Exception as e:
-                print(f"Warning: Could not start file monitoring: {e}")
+
+    def _start_file_monitoring(self):
+        """Start monitoring the knowledge base folder for changes"""
+        if not HAS_RAG_DEPS:
+            print("Warning: File monitoring disabled - RAG dependencies not available")
+            return
+            
+        try:
+            from watchdog.observers import Observer
+            
+            self.observer = Observer()
+            event_handler = FileChangeHandler(self.rag_manager)
+            self.observer.schedule(
+                event_handler, 
+                str(self.knowledge_folder), 
+                recursive=True
+            )
+            self.observer.start()
+            print(f"Started file monitoring for: {self.knowledge_folder}")
+            
+        except ImportError:
+            print("Warning: Watchdog not available - file monitoring disabled")
+        except Exception as e:
+            print(f"Warning: Could not start file monitoring: {e}")
     
     def _initial_scan(self):
         """Perform initial scan of knowledge base folder"""
@@ -542,9 +554,16 @@ class CompanyKnowledgeBaseTool(BaseTool):
                 "Note: This is fallback data. For full knowledge base access, ensure RAG dependencies are installed and knowledge_base folder contains relevant files."
             )
     
+    def cleanup(self):
+        """Cleanup resources"""
+        if hasattr(self, 'observer') and self.observer:
+            try:
+                self.observer.stop()
+                self.observer.join(timeout=5.0)  # Add timeout to prevent hanging
+            except Exception as e:
+                print(f"Warning: Error stopping file observer: {e}")
+
     def __del__(self):
         """Cleanup file monitoring when tool is destroyed"""
-        if hasattr(self, 'observer') and self.observer:
-            self.observer.stop()
-            self.observer.join()
+        self.cleanup()
 
