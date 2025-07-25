@@ -1,0 +1,8 @@
+{
+  "phase_a": {
+    "phase": "A",
+    "status": "failed",
+    "error": "'EnhancedEventPitchCrew' object has no attribute '_original_tasks'",
+    "duration_seconds": 3.528594970703125e-05
+  }
+}
