@@ -202,7 +202,6 @@ class EnvironmentValidator:
         return results
 
 
-@CrewBase
 class EnhancedEventPitchCrew:
     """Enhanced Event Pitch Crew with hierarchical structure and improved error handling"""
     
@@ -234,12 +233,12 @@ class EnhancedEventPitchCrew:
         """Initialize all tools with proper error handling"""
         try:
             # Core research tools
-            self.perplexity_tool = PerplexityDeepResearchTool()
-            self.file_read_tool = FileReadTool()
-            self.folder_read_tool = FolderReadTool(
+            self._perplexity_tool = PerplexityDeepResearchTool()
+            self._file_read_tool = FileReadTool()
+            self._folder_read_tool = FolderReadTool(
                 default_folder=self.path_manager.get_path('input_files')
             )
-            self.company_knowledge_tool = CompanyKnowledgeBaseTool(
+            self._company_knowledge_tool = CompanyKnowledgeBaseTool(
                 knowledge_folder=self.path_manager.get_path('knowledge_base')
             )
             
@@ -269,8 +268,8 @@ class EnhancedEventPitchCrew:
     def _initialize_fallback_tools(self):
         """Initialize minimal fallback tools if main initialization fails"""
         try:
-            self.file_read_tool = FileReadTool()
-            self.folder_read_tool = FolderReadTool()
+            self._file_read_tool = FileReadTool()
+            self._folder_read_tool = FolderReadTool()
             logger.info("Fallback tools initialized")
         except Exception as e:
             logger.error(f"Failed to initialize even fallback tools: {e}")
@@ -287,16 +286,11 @@ class EnhancedEventPitchCrew:
                 )
                 
                 # Setup long-term memory with RAG
-                self.long_term_memory = LongTermMemory(
-                    storage=self.rag_manager,
-                    embedder={
-                        "provider": "google",
-                        "config": {
-                            "model": "models/embedding-001",
-                            "api_key": gemini_api_key
-                        }
-                    }
-                )
+                try:
+                    self.long_term_memory = LongTermMemory()
+                except Exception as e:
+                    logger.warning(f"LongTermMemory initialization failed: {e}, using None")
+                    self.long_term_memory = None
                 
                 # Setup short-term memory
                 self.short_term_memory = ShortTermMemory()
@@ -395,25 +389,38 @@ class EnhancedEventPitchCrew:
         return self._create_agent_with_memory('proposal_manager')
     
     # =============================================================================
+    # TOOL METHODS (Required by @CrewBase)
+    # =============================================================================
+    
+    def folder_read_tool(self):
+        """Return the folder read tool instance"""
+        return getattr(self, '_folder_read_tool', FolderReadTool())
+    
+    def file_read_tool(self):
+        """Return the file read tool instance"""
+        return getattr(self, '_file_read_tool', FileReadTool())
+    
+    def perplexity_tool(self):
+        """Return the perplexity tool instance"""
+        return getattr(self, '_perplexity_tool', PerplexityDeepResearchTool())
+    
+    def company_knowledge_tool(self):
+        """Return the company knowledge tool instance"""
+        return getattr(self, '_company_knowledge_tool', PlaceholderTool())
+    
+    # =============================================================================
     # SPECIALIST TIER AGENTS - PHASE A
     # =============================================================================
     
     @agent
     def briefing_analyst(self) -> Agent:
         """Briefing Analyst for document analysis"""
-        tools = [
-            self.folder_read_tool,
-            self.file_read_tool,
-            getattr(self, 'document_analysis_tool', None)
-        ]
-        tools = [t for t in tools if t is not None]
-        return self._create_agent_with_memory('briefing_analyst', tools)
+        return self._create_agent_with_memory('briefing_analyst', ['folder_read_tool', 'file_read_tool'])
     
     @agent
     def market_researcher(self) -> Agent:
         """Market Researcher for Dutch market intelligence"""
-        tools = [self.perplexity_tool] if hasattr(self, 'perplexity_tool') else []
-        return self._create_agent_with_memory('market_researcher', tools)
+        return self._create_agent_with_memory('market_researcher', ['perplexity_tool'])
     
     @agent
     def client_analyst(self) -> Agent:

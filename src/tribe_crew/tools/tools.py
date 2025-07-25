@@ -9,7 +9,7 @@ import json
 from pathlib import Path
 from typing import List, Dict, Any, Optional
 from datetime import datetime
-from crewai_tools import BaseTool
+from crewai.tools import BaseTool
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
@@ -332,15 +332,15 @@ class FolderReadTool(BaseTool):
     name: str = "Folder Read Tool"
     description: str = "A tool to read all files in a specified folder. Use this to read multiple briefing documents or knowledge base files."
     
-    def __init__(self, default_folder: str = "./input_files"):
-        super().__init__()
-        self.default_folder = default_folder
+    def __init__(self, default_folder: str = "./input_files", **kwargs):
+        super().__init__(**kwargs)
+        self._default_folder = default_folder
 
     def _run(self, folder_path: str = None) -> str:
         """Reads all files in the specified folder or default input folder."""
         try:
             # Use provided folder or default
-            folder_to_scan = folder_path if folder_path else self.default_folder
+            folder_to_scan = folder_path if folder_path else self._default_folder
             folder = Path(folder_to_scan).resolve()
             
             # Security: Check if folder exists
@@ -431,7 +431,8 @@ class CompanyKnowledgeBaseTool(BaseTool):
         "Use this to ground creative concepts in our company's identity, past projects, and brand values."
     )
     
-    def __init__(self, knowledge_folder: str = "./knowledge_base"):
+    def __init__(self, knowledge_folder: str = "./knowledge_base", **kwargs):
+        super().__init__(**kwargs)
         self.knowledge_folder = Path(knowledge_folder)
         self.knowledge_folder.mkdir(exist_ok=True)
         

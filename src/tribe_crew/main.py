@@ -329,6 +329,29 @@ def get_execution_mode() -> str:
             return "separated"
 
 
+def run():
+    """Entry point for uv run command"""
+    return main()
+
+
+def train():
+    """Train the crew (placeholder for future implementation)"""
+    print("🎓 Training functionality is not implemented yet.")
+    return 0
+
+
+def test():
+    """Test the crew (placeholder for future implementation)"""
+    print("🧪 Testing functionality is not implemented yet.")
+    return 0
+
+
+def replay():
+    """Replay the crew (placeholder for future implementation)"""
+    print("🔄 Replay functionality is not implemented yet.")
+    return 0
+
+
 def main():
     """Main execution function"""
     display_banner()

@@ -1,0 +1,58 @@
+# Tasks Configuration for Tribe Crew
+# This file defines the tasks executed by the AI agents
+
+market_research_task:
+  description: >
+    Conduct comprehensive market research for the Dutch creative event industry.
+    Analyze current trends, audience preferences, competitor landscape, and 
+    emerging opportunities. Focus on understanding what resonates with Dutch 
+    audiences and identify gaps in the market.
+  expected_output: >
+    A detailed market research report including trend analysis, audience insights,
+    competitive landscape overview, and strategic recommendations for event concepts
+    that would appeal to Dutch audiences.
+  agent: market_researcher
+
+cultural_analysis_task:
+  description: >
+    Analyze cultural context and audience preferences specific to the Dutch market.
+    Ensure concepts align with Dutch values, cultural norms, and social dynamics.
+    Identify cultural elements that should be incorporated or avoided.
+  expected_output: >
+    A cultural analysis report highlighting key Dutch cultural insights, 
+    audience preferences, cultural opportunities, and recommendations for 
+    culturally-relevant creative approaches.
+  agent: cultural_specialist
+
+concept_development_task:
+  description: >
+    Develop 3 innovative creative event concepts based on market research and 
+    cultural insights. Each concept should be unique, memorable, and commercially 
+    viable while resonating with Dutch audiences.
+  expected_output: >
+    Three distinct creative event concepts, each with detailed descriptions,
+    target audience analysis, unique value propositions, and preliminary 
+    creative direction including themes, experiences, and key differentiators.
+  agent: creative_director
+
+production_planning_task:
+  description: >
+    Transform the selected creative concept into a detailed production plan.
+    Include venue requirements, technical specifications, timeline, resource 
+    needs, budget considerations, and risk mitigation strategies.
+  expected_output: >
+    A comprehensive production plan including venue specifications, technical 
+    requirements, detailed timeline, resource allocation, budget breakdown,
+    and risk management plan.
+  agent: production_manager
+
+pitch_development_task:
+  description: >
+    Create a compelling client presentation that showcases the selected concept
+    and production plan. Structure the pitch to highlight creative vision,
+    business value, market opportunity, and implementation feasibility.
+  expected_output: >
+    A professional pitch presentation with executive summary, concept overview,
+    market rationale, production timeline, budget summary, and compelling 
+    visuals that effectively communicate the creative vision and business case.
+  agent: pitch_specialist
